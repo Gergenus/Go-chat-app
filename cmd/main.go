@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Gergenus/StandardLib/internal/handler"
+	"github.com/Gergenus/StandardLib/internal/middleware"
 	"github.com/Gergenus/StandardLib/internal/repository"
 	"github.com/Gergenus/StandardLib/internal/service"
 	"github.com/Gergenus/StandardLib/pkg"
@@ -29,8 +30,10 @@ func main() {
 	userRepo := repository.PostgresUserRepo{DB: db, Hash: &hash}
 	authService := service.JWTauth{UserRepo: &userRepo, Hasher: &hash, Auther: &jwtPKG}
 	handlerAuth := handler.NewEchoHandlerAuth(&authService)
+	middle := middleware.NewEchoMiddleware(&jwtPKG)
 	e.POST("/SignUp", handlerAuth.SignUp)
 	e.POST("/SignIn", handlerAuth.SignIn)
+	e.GET("/", handler.Access, middle.AuthMiddleware)
 	s.ListenAndServe()
 
 }
