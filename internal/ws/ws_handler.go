@@ -47,8 +47,8 @@ func (h *Handler) JoinRoom(c echo.Context) error {
 		})
 	}
 	roomId := c.Param("roomId")
-	clientId := c.QueryParam("UserId")
-	username := c.Get("name").(string)
+	clientId := c.Get("name").(string)
+	username := clientId
 
 	cl := &Client{
 		Socket:   conn,
@@ -73,4 +73,27 @@ func (h *Handler) JoinRoom(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{
 		"status": "leaved",
 	})
+}
+
+func (h *Handler) GetRooms(c echo.Context) error {
+	rooms := []models.RoomsResponse{}
+	for _, d := range h.Hub.Rooms {
+		rooms = append(rooms, models.RoomsResponse{
+			ID:   d.ID,
+			Name: d.Name,
+		})
+	}
+	return c.JSON(http.StatusOK, rooms)
+}
+
+func (h *Handler) GetClients(c echo.Context) error {
+	clients := []models.ClientsResponse{}
+	roomId := c.QueryParam("roomId")
+	for _, d := range h.Hub.Rooms[roomId].Clients {
+		clients = append(clients, models.ClientsResponse{
+			ID:       d.ID,
+			Username: d.Username,
+		})
+	}
+	return c.JSON(http.StatusOK, clients)
 }

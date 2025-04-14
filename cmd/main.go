@@ -42,6 +42,9 @@ func main() {
 	e.POST("/ws/createRoom", hubHandler.CreateRoom, middle.AuthMiddleware)
 	e.GET("/ws/joinRoom/:roomId", hubHandler.JoinRoom, middle.WSAuthMiddleware)
 
+	e.GET("ws/getRooms", hubHandler.GetRooms, middle.AuthMiddleware)
+	e.GET("/ws/getClients", hubHandler.GetClients, middle.AuthMiddleware) // roomId = 1
+
 	go hub.Run()
 
 	s.ListenAndServe()
