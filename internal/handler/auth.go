@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -48,6 +49,7 @@ func (e *EchoHandlerAuth) SignUp(c echo.Context) error {
 }
 
 func (e *EchoHandlerAuth) SignIn(c echo.Context) error {
+	fmt.Println("SIGNIN")
 	var user models.User
 	err := c.Bind(&user)
 	if err != nil {

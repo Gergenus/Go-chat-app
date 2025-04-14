@@ -9,6 +9,7 @@ import (
 	"github.com/Gergenus/StandardLib/internal/middleware"
 	"github.com/Gergenus/StandardLib/internal/repository"
 	"github.com/Gergenus/StandardLib/internal/service"
+	"github.com/Gergenus/StandardLib/internal/ws"
 	"github.com/Gergenus/StandardLib/pkg"
 	"github.com/labstack/echo/v4"
 )
@@ -31,9 +32,18 @@ func main() {
 	authService := service.JWTauth{UserRepo: &userRepo, Hasher: &hash, Auther: &jwtPKG}
 	handlerAuth := handler.NewEchoHandlerAuth(&authService)
 	middle := middleware.NewEchoMiddleware(&jwtPKG)
+
+	hub := ws.NewHub()
+	hubHandler := ws.NewHandler(hub)
+
 	e.POST("/SignUp", handlerAuth.SignUp)
 	e.POST("/SignIn", handlerAuth.SignIn)
 	e.GET("/", handler.Access, middle.AuthMiddleware)
+	e.POST("/ws/createRoom", hubHandler.CreateRoom, middle.AuthMiddleware)
+	e.GET("/ws/joinRoom/:roomId", hubHandler.JoinRoom, middle.WSAuthMiddleware)
+
+	go hub.Run()
+
 	s.ListenAndServe()
 
 }
