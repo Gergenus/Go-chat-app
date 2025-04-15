@@ -54,9 +54,8 @@ func (e *EchoServer) InitializationRouts() {
 	hub := ws.NewHub()
 	hubHandler := ws.NewHandler(hub)
 
-	e.App.POST("/SignUp", handlerAuth.SignUp) // {"username": "Denis", "email": "123", "password": "123"}
-	e.App.POST("/SignIn", handlerAuth.SignIn) // {"username": "Denis", "email": "123", "password": "123"}
-	e.App.GET("/", handler.Access, middle.AuthMiddleware)
+	e.App.POST("/SignUp", handlerAuth.SignUp)                                  // {"username": "Denis", "email": "123", "password": "123"}
+	e.App.POST("/SignIn", handlerAuth.SignIn)                                  // {"username": "Denis", "email": "123", "password": "123"}
 	e.App.POST("/ws/createRoom", hubHandler.CreateRoom, middle.AuthMiddleware) // { "id": "1", "name": "chatting"}
 	e.App.GET("/ws/joinRoom/:roomId", hubHandler.JoinRoom, middle.WSAuthMiddleware)
 
