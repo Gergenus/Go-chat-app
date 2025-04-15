@@ -1,0 +1,20 @@
+services:
+  chat:
+    build: ./
+    ports: 
+      - 8080:8080
+    env_file:
+      - .env
+    depends_on:
+      - db
+    
+  db:
+    image: postgres:latest
+    restart: always
+    volumes:
+    - /var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - 1499:5432
+    

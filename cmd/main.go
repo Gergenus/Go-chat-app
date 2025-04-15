@@ -9,7 +9,7 @@ import (
 
 func main() {
 	pkg.Load()
-	db := pkg.InitDB(os.Getenv("USER"), os.Getenv("PASSWORD"), os.Getenv("HOST"), os.Getenv("PORT"), os.Getenv("DBNAME"), os.Getenv("SSLMODE"))
+	db := pkg.InitDB(os.Getenv("USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("HOST"), os.Getenv("PORT"), os.Getenv("DBNAME"), os.Getenv("SSLMODE"))
 
 	Server := server.NewEchoServer(db)
 	Server.InitializationRouts()
