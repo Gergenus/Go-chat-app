@@ -32,6 +32,11 @@ func (e *EchoHandlerAuth) SignUp(c echo.Context) error {
 			"error": "Invalid request payload",
 		})
 	}
+	if user.Email == "" || user.Password == "" || user.Username == "" {
+		return echo.NewHTTPError(http.StatusBadRequest, map[string]string{
+			"error": "Invalid request payload",
+		})
+	}
 	id, err := e.ServiceAuth.SignUp(user.Username, user.Email, user.Password)
 	if err != nil {
 		if errors.Is(err, service.ErrUserAlreadyExists) {
